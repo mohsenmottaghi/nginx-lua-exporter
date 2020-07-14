@@ -1,5 +1,5 @@
-
 -- Openresty prometheus exporter
+-- Github mohsenmottaghi/openresty-exporter
 
 local banner = "MOHSEN MOTTAGHI | 2020 July"
 local initialized = {}
@@ -48,17 +48,6 @@ function bucketInitialization(serverName)
 end
 
 -- Metrics exporters
--- Total requets exporter
-function exportTotalRequests()
-  ngx.print("# HELP nginx_http_request_duration_seconds Total requests", "\n",
-            "# TYPE nginx_http_request_duration_seconds counter", "\n")
-  for ind, result in ipairs(totalRequests) do
-    if type(result) == "table" then
-      ngx.print("nginx_http_request_duration_seconds_count{host=\"", result[1],"\"} ", result[2], "\n")
-    end
-  end
-end
-
 -- Total request base on status code exporter
 function exportRequestDetails( )
   ngx.print("# HELP nginx_http_requests_total Number of HTTP requests", "\n",
@@ -70,33 +59,43 @@ function exportRequestDetails( )
   end
 end
 
--- Total request time exporter
-function exportRequestLatency( )
-  ngx.print("# HELP nginx_http_request_duration_seconds_sum Number of HTTP requests", "\n",
-            "# TYPE nginx_http_request_duration_seconds_sum counter", "\n")
-  for ind, result in ipairs(requestLatency) do
-    if type(result) == "table" then
-      ngx.print("nginx_http_request_duration_seconds_sum{host=\"", result[1],"\"} ", result[2], "\n")
-    end
-  end
-end
-
--- Requests bucket exporter
-function exportRequestBucket()
-  ngx.print("# HELP nginx_http_request_duration_seconds_bucket Number of HTTP requests", "\n",
-            "# TYPE nginx_http_request_duration_seconds_bucket counter", "\n")
-  for ind, result in ipairs(requestBuckets) do
-    if type(result) == "table" then
-      ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"", result[2], "\"} ", result[3], "\n")
-    end
-  end
-end
-
 function exportConnectionSummary()
   ngx.print("# HELP nginx_http_connections Number of HTTP connections", "\n",
             "# TYPE nginx_http_connections gauge", "\n")
   for ind, result in ipairs(connectionSummary) do
     ngx.print("nginx_http_connections{state=\"", result[1], "\"} ", result[2], "\n")
+  end
+end
+
+-- Histogram nginx_http_request_duration_seconds
+function exportHistogramRequestDuration()
+  ngx.print("# HELP nginx_http_request_duration_seconds HTTP request latency", "\n",
+            "# TYPE nginx_http_request_duration_seconds histogram", "\n")
+  for ind, result in ipairs(requestBuckets) do
+    -- if result[2] == "+Inf" then
+    --   ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"", result[2], "\"} ", result[3], "\n")
+    -- else
+    --   ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"", string.format("%.3f",result[2]), "\"} ", result[3], "\n")
+    -- end
+    ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"", string.format("%.3f",result[2]), "\"} ", result[3], "\n")
+  end
+
+  for ind, result in ipairs(totalRequests) do
+    if type(result) == "table" then
+      ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"+Inf\"} ", result[2], "\n")
+    end
+  end
+
+  for ind, result in ipairs(requestLatency) do
+    if type(result) == "table" then
+      ngx.print("nginx_http_request_duration_seconds_sum{host=\"", result[1],"\"} ", result[2], "\n")
+    end
+  end
+
+  for ind, result in ipairs(totalRequests) do
+    if type(result) == "table" then
+      ngx.print("nginx_http_request_duration_seconds_count{host=\"", result[1],"\"} ", result[2], "\n")
+    end
   end
 end
 
@@ -139,13 +138,14 @@ function calRequestBucket(serverName, requestTime)
   end
 
   requestTime = tonumber(requestTime)
-  for bucket = 1, tableLen(defaultBuckets) do
-    if requestTime <= defaultBuckets[bucket] then
-      searchResult = tableSearchStatus2(requestBuckets, 1, serverName, 2, defaultBuckets[bucket])
+  for bucket = 1, tableLen(defaultBuckets)  do
+    if defaultBuckets[bucket] >= requestTime then
+      local searchResult = tableSearchStatus2(requestBuckets, 1, serverName, 2, defaultBuckets[bucket])
       requestBuckets[searchResult] = {serverName, defaultBuckets[bucket], requestBuckets[searchResult][3] + 1}
-      break
+      -- break
     end
   end
+  -- requestBuckets[tableLen(defaultBuckets)] = {serverName, "+Inf", requestBuckets[tableLen(defaultBuckets)][3] + 1}
 end
 
 -- Calculate connection status
@@ -170,7 +170,7 @@ end
 
 -- Connection collector
 function connectionCollector(reading,waiting,writing)
-
+  calConnectionSummary(reading,waiting,writing)
 end
 
 -- Main functions
@@ -178,10 +178,11 @@ function PrometheusMetrics()
   ngx.header.content_type = "text/plain"
   ngx.print("# ", banner, "\n")
   exportConnectionSummary()
-  exportTotalRequests()
   exportRequestDetails()
-  exportRequestLatency()
-  exportRequestBucket()
+  exportHistogramRequestDuration()
+  -- exportRequestBucket()
+  -- exportRequestLatency()
+  -- exportTotalRequests()
   -- ngx.print("\n")
 end
 
