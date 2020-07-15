@@ -42,8 +42,9 @@ end
 
 -- Initalize buckets for servername
 function bucketInitialization(serverName)
+  local preTableSize = tableLen(requestBuckets)
   for timeBucket = 1, tableLen(defaultBuckets) do
-    requestBuckets[timeBucket] = {serverName, defaultBuckets[timeBucket], 0}
+    requestBuckets[ preTableSize + timeBucket] = {serverName, defaultBuckets[timeBucket], 0}
   end
 end
 
@@ -72,11 +73,6 @@ function exportHistogramRequestDuration()
   ngx.print("# HELP nginx_http_request_duration_seconds HTTP request latency", "\n",
             "# TYPE nginx_http_request_duration_seconds histogram", "\n")
   for ind, result in ipairs(requestBuckets) do
-    -- if result[2] == "+Inf" then
-    --   ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"", result[2], "\"} ", result[3], "\n")
-    -- else
-    --   ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"", string.format("%.3f",result[2]), "\"} ", result[3], "\n")
-    -- end
     ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"", string.format("%.3f",result[2]), "\"} ", result[3], "\n")
   end
 
@@ -145,7 +141,6 @@ function calRequestBucket(serverName, requestTime)
       -- break
     end
   end
-  -- requestBuckets[tableLen(defaultBuckets)] = {serverName, "+Inf", requestBuckets[tableLen(defaultBuckets)][3] + 1}
 end
 
 -- Calculate connection status
@@ -180,9 +175,6 @@ function PrometheusMetrics()
   exportConnectionSummary()
   exportRequestDetails()
   exportHistogramRequestDuration()
-  -- exportRequestBucket()
-  -- exportRequestLatency()
-  -- exportTotalRequests()
   -- ngx.print("\n")
 end
 
