@@ -10,6 +10,7 @@ local requestBuckets = {}
 local connectionSummary = {{"reading", 0}, {"waiting", 0 }, {"writing", 0}}
 local defaultBuckets = {0.005, 0.01, 0.02, 0.03, 0.05, 0.075, 0.1, 0.2, 0.3,
                         0.4, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 10}
+local totalTraffic = {}
 local testvar = ""
 
 -- Operation functions
@@ -95,6 +96,21 @@ function exportHistogramRequestDuration()
   end
 end
 
+-- Total Traffic exporter
+function exportTotalTraffic()
+  ngx.print("# HELP nginx_http_received_bytes Number of RX bytes", "\n",
+            "# TYPE nginx_http_received_bytes counter", "\n")
+  for ind, result in ipairs(totalTraffic) do
+    ngx.print("nginx_http_received_bytes{host=\"", result[1], "\"} ", result[2], "\n")
+  end
+  
+  ngx.print("# HELP nginx_http_sent_bytes Number of TX bytes", "\n",
+            "# TYPE nginx_http_sent_bytes counter", "\n")
+  for ind, result in ipairs(totalTraffic) do
+    ngx.print("nginx_http_sent_bytes{host=\"", result[1], "\"} ", result[3], "\n")
+  end
+end
+
 -- Compute functions
 -- Calculate total requests
 function calTotalRequest(serverName)
@@ -150,6 +166,16 @@ function calConnectionSummary(reading,waiting,writing)
   connectionSummary[3] = {"writing" , writing}
 end
 
+-- Calculate Total traffic
+function calTotalTraffic(serverName, bytesReceived, bytesSent)
+  searchResult = tableSearchStatus1(totalTraffic, 1, serverName)
+  if searchResult == nil then
+    totalTraffic[tableLen(totalTraffic) + 1] = {serverName, bytesReceived, bytesSent}
+  else
+    totalTraffic[searchResult] = {serverName, totalTraffic[searchResult][2] +  bytesReceived, totalTraffic[searchResult][3] +  bytesSent}
+  end
+end
+
 -- Collectors
 -- Request collector
 function requestCollector(serverName, statusCode)
@@ -168,6 +194,19 @@ function connectionCollector(reading,waiting,writing)
   calConnectionSummary(reading,waiting,writing)
 end
 
+-- Traffic collector
+function trafficCollector(serverName, bytesReceived, bytesSent)
+  if bytesReceived == nil then
+    bytesReceived = 0
+  end
+
+  if bytesSent == nil then 
+    bytesSent = 0
+  end
+
+  calTotalTraffic(serverName, bytesReceived, bytesSent)
+end
+
 -- Main functions
 function PrometheusMetrics()
   ngx.header.content_type = "text/plain"
@@ -175,7 +214,8 @@ function PrometheusMetrics()
   exportConnectionSummary()
   exportRequestDetails()
   exportHistogramRequestDuration()
-  -- ngx.print("\n")
+  exportTotalTraffic()
+  -- ngx.print("\n", testvar)
 end
 
 return Prometheus
