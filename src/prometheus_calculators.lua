@@ -52,8 +52,12 @@ function calculator.bucket(serverName, requestTime)
   requestTime = tonumber(requestTime)
   for bucket = 1, operation.tableLen(key.defaultBuckets)  do
     if key.defaultBuckets[bucket] >= requestTime then
-      local searchResult = operation.tableSearchStatus2(key.requestsBucket, 1, serverName, 2, key.defaultBuckets[bucket])
-      key.requestsBucket[searchResult] = {serverName, key.defaultBuckets[bucket], key.requestsBucket[searchResult][3] + 1}
+      local searchResult = operation.tableSearchStatus2(
+        key.requestsBucket, 1, serverName, 2, key.defaultBuckets[bucket]
+      )
+      key.requestsBucket[searchResult] = {
+        serverName, key.defaultBuckets[bucket], key.requestsBucket[searchResult][3] + 1
+      }
       -- break
     end
   end

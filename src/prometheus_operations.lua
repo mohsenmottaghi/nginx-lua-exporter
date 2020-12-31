@@ -1,4 +1,4 @@
--- prometheus_operations 
+-- prometheus_operations
 
 local operation = {}
 

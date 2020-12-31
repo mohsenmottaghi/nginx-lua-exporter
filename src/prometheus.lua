@@ -3,10 +3,12 @@
 
 local banner = "NGINX Lua exporter | MOHSEN MOTTAGHI | 2021 Jun"
 
+local prometheus = {}
+
 local exporters = require("prometheus_exporters")
 
 -- Main functions
-function PrometheusMetrics()
+function prometheus.metrics()
   ngx.header.content_type = "text/plain"
   ngx.print("# ", banner, "\n")
 
@@ -16,4 +18,4 @@ function PrometheusMetrics()
 
 end
 
-return true
+return prometheus
