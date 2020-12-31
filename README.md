@@ -10,11 +10,12 @@ http {
 ...
 
     lua_shared_dict prometheus_metrics 10M;
-    lua_package_path "/opt/prometheus.lua;;";
+    lua_package_path "/opt/prometheus/?.lua;;";
 
     log_by_lua_block {
-        requestCollector(ngx.var.server_name, ngx.var.status)
-        latencyCollector(ngx.var.server_name, ngx.var.request_time)
+        local collector = require("prometheus_collectors")
+        collector.requests(ngx.var.server_name, ngx.var.status)
+        collector.latency(ngx.var.server_name, ngx.var.request_time)
     }
 ...
 }
@@ -26,14 +27,18 @@ To expose metrics on `/<PATH>` edit server context like this:
 server {
     ...
 
-    location = /metrics {
+    location /<PATH> {
         content_by_lua_block {
-            connectionCollector(
+            local prometheus = require("prometheus")
+            local collector = require("prometheus_collectors")
+
+            collector.connection(
                                 ngx.var.connections_reading,
                                 ngx.var.connections_waiting,
                                 ngx.var.connections_writing
                               )
-            PrometheusMetrics()
+
+            prometheus.metrics();
         }
     }
 
