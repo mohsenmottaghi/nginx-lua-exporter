@@ -15,7 +15,6 @@ function prometheus.metrics()
   exporters.connection()
   exporters.requests()
   exporters.requestsHistogram()
-
 end
 
 return prometheus

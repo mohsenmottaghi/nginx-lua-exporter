@@ -6,7 +6,7 @@ local key = require("prometheus_keys")
 function exporter.connection()
     ngx.print("# HELP nginx_http_connections Number of HTTP connections", "\n",
               "# TYPE nginx_http_connections gauge", "\n")
-    for _, result in ipairs(key.connection) do
+    for _, result in ipairs(key["connection"]) do
       ngx.print("nginx_http_connections{state=\"", result[1], "\"} ", result[2], "\n")
     end
 end
@@ -15,7 +15,7 @@ end
 function exporter.requests( )
     ngx.print("# HELP nginx_http_requests_total Number of HTTP requests", "\n",
               "# TYPE nginx_http_requests_total counter", "\n")
-    for _, result in ipairs(key.requestsDetail) do
+    for _, result in ipairs(key["requestsDetail"]) do
       if type(result) == "table" then
         ngx.print("nginx_http_requests_total{host=\"", result[1], "\",status=\"", result[2], "\"} ", result[3], "\n")
       end
@@ -26,26 +26,26 @@ end
 function exporter.requestsHistogram()
   ngx.print("# HELP nginx_http_request_duration_seconds HTTP request latency", "\n",
             "# TYPE nginx_http_request_duration_seconds histogram", "\n")
-  for _, result in ipairs(key.requestsBucket) do
+  for _, result in ipairs(key["requestsBucket"]) do
     ngx.print(
       "nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"",
       string.format("%.3f",result[2]), "\"} ", result[3], "\n"
     )
   end
 
-  for _, result in ipairs(key.requestsTotal) do
+  for _, result in ipairs(key["requestsTotal"]) do
     if type(result) == "table" then
       ngx.print("nginx_http_request_duration_seconds_bucket{host=\"", result[1], "\",le=\"+Inf\"} ", result[2], "\n")
     end
   end
 
-  for _, result in ipairs(key.requestsLatency) do
+  for _, result in ipairs(key["requestsLatency"]) do
     if type(result) == "table" then
       ngx.print("nginx_http_request_duration_seconds_sum{host=\"", result[1],"\"} ", result[2], "\n")
     end
   end
 
-  for _, result in ipairs(key.requestsTotal) do
+  for _, result in ipairs(key["requestsTotal"]) do
     if type(result) == "table" then
       ngx.print("nginx_http_request_duration_seconds_count{host=\"", result[1],"\"} ", result[2], "\n")
     end
