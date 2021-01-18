@@ -11,6 +11,9 @@ jobs:
       - name: Install Luarocks
         run: |
           sudo apt update && sudo apt install -y luarocks
+      - name: Install dkjson
+        run: |
+          sudo luarocks install dkjson
       - name: Prepare rockspec
         run: |
           export VERSION_LUAROCKS=0.2-0
