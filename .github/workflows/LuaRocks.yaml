@@ -1,9 +1,12 @@
 name: Lua Rocks package
 
-on: [push]
+on:
+  push:
+    tags:
+       - '*'
 
 jobs:
-  check_lint:
+  upload_rockspec:
     name: Check Lua lint
     runs-on: ubuntu-latest
     steps:
@@ -14,17 +17,19 @@ jobs:
       - name: Install dkjson
         run: |
           sudo luarocks install dkjson
+      - name: Set environment variables
+        id: set_env
+        run: |
+          echo "::set-output name=VERSION_LUAROCKS::0.2-0"
+          echo "::set-output name=SRC_TAG::0.2-0"
       - name: Prepare rockspec
         run: |
-          export VERSION_LUAROCKS=0.2-0
-          export SRC_TAG=0.2-0
-          sed -i "s/VERSION_LUAROCKS/$VERSION_LUAROCKS/g" nginx-lua-exporter.rockspec  && \
-          sed -i "s/SRC_TAG/$SRC_TAG/g" nginx-lua-exporter.rockspec  && \
-          mv nginx-lua-exporter.rockspec nginx-lua-exporter-$VERSION_LUAROCKS.rockspec &&
-          cat  nginx-lua-exporter-$VERSION_LUAROCKS.rockspec
+          sed -i "s/VERSION_LUAROCKS/${{ steps.set_env.VERSION_LUAROCKS }}/g" nginx-lua-exporter.rockspec  && \
+          sed -i "s/SRC_TAG/${{ steps.set_env.SRC_TAG }}/g" nginx-lua-exporter.rockspec  && \
+          mv nginx-lua-exporter.rockspec nginx-lua-exporter-${{ steps.set_env.VERSION_LUAROCKS }}.rockspec &&
+          cat  nginx-lua-exporter-${{ steps.set_env.VERSION_LUAROCKS }}.rockspec
       - name: Upload rockspec
         env:
           API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
         run: |
-          export VERSION_LUAROCKS=0.2-0
-          sudo luarocks upload --api-key=$API_KEY --force nginx-lua-exporter-$VERSION_LUAROCKS.rockspec
+          sudo luarocks upload --api-key="$API_KEY" --force nginx-lua-exporter-${{ steps.set_env.VERSION_LUAROCKS }}.rockspec
