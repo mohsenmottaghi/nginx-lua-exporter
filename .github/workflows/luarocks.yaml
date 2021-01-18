@@ -1,0 +1,15 @@
+name: Lua Rocks
+
+on: [push]
+
+jobs:
+  check_lint:
+    name: Check Lua lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Luarocks
+        run: |
+          apt update && apt install -y lucarocks
+      - name: Install lua lint
+        run: |
+          luarocks install luacheck

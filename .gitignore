@@ -41,3 +41,4 @@ luac.out
 
 # Lab
 start.sh
+nginx-lua-exporter-0.2-0.rockspec
