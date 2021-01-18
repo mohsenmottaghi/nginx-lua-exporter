@@ -7,6 +7,7 @@ jobs:
     name: Check Lua lint
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
       - name: Install Luarocks
         run: |
           sudo apt update && sudo apt install -y luarocks
