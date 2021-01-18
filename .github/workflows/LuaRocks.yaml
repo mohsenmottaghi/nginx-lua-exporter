@@ -20,8 +20,8 @@ jobs:
       - name: Set environment variables
         id: set_env
         run: |
-          echo "::set-output name=VERSION_LUAROCKS::0.2-0"
-          echo "::set-output name=SRC_TAG::0.2-0"
+          echo "::set-output name=VERSION_LUAROCKS::$( git describe --tags --abbrev=0 | cut -d 'v' -f 2 | sed  's/\./-/2' )"
+          echo "::set-output name=SRC_TAG::$( git describe --tags --abbrev=0 )"
       - name: Prepare rockspec
         run: |
           sed -i "s/VERSION_LUAROCKS/${{ steps.set_env.outputs.VERSION_LUAROCKS }}/g" nginx-lua-exporter.rockspec  && \
