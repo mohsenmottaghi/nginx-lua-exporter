@@ -1,5 +1,5 @@
-# openresty-exporter
-OpenResty Prometheus exporter
+# NGINX Lua exporter
+![Check Lua Lint](https://github.com/mohsenmottaghi/nginx-lua-exporter/workflows/Check%20Lua%20Lint/badge.svg)
 
 # How to setup
 

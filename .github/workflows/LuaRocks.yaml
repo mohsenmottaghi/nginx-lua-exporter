@@ -1,4 +1,4 @@
-name: Lua Rocks package
+name: Build Lua Rocks Package
 
 on: [push]
 
