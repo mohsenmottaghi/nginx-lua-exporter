@@ -1,7 +1,17 @@
 # NGINX Lua exporter
 ![Check Lua Lint](https://github.com/mohsenmottaghi/nginx-lua-exporter/workflows/Check%20Lua%20Lint/badge.svg)
+![Build Lua Rocks Package](https://github.com/mohsenmottaghi/nginx-lua-exporter/workflows/Build%20Lua%20Rocks%20Package/badge.svg)
 
-# How to setup
+
+## How to install
+To install this module you have to option:
+1. Use Luarocks 
+    ```bash
+    luarocks install nginx-lua-exporter
+    ```
+2. Clone this repo or download files ( Note: We recommend using tags and releases)
+
+## How to setup
 
 To collect data from Openresty, edit `nginx.conf` :
 
@@ -9,8 +19,9 @@ To collect data from Openresty, edit `nginx.conf` :
 http {
 ...
 
-    lua_shared_dict prometheus_metrics 10M;
-    lua_package_path "/opt/prometheus/?.lua;;";
+    lua_shared_dict prometheus_memory 10M;
+    lua_package_path "/< PATH TO FILES >/?.lua;;";
+
 
     log_by_lua_block {
         local collector = require("prometheus_collectors")
@@ -21,7 +32,7 @@ http {
 }
 ```
 
-To expose metrics on `/<PATH>` edit server context like this:
+To expose metrics on `/< PATH TO FILES >` edit server context like this:
 
 ```
 server {
@@ -41,7 +52,12 @@ server {
             prometheus.metrics();
         }
     }
-
     ...
 }
+```
+
+## Test and Develop
+```bash
+podman run -it --rm --name nginx-lua-expoerter-test -v $PWD/example/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf  -v $PWD/example/server.conf:/etc/nginx/conf.d/default.conf -v $PWD/src:/opt/prometheus -p 8080:80 docker.io/openresty/openresty
+
 ```

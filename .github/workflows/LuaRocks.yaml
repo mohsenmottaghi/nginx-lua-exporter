@@ -1,9 +1,12 @@
 name: Build Lua Rocks Package
 
-on: [push]
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
-  check_lint:
+  build_luarocks_package:
     name: Check Lua lint
     runs-on: ubuntu-latest
     steps:
