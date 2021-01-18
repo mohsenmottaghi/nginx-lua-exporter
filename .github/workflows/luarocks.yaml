@@ -16,5 +16,7 @@ jobs:
       - name: Check lint of src
         run: |
           pwd && \
-          ls -lh && \
-          luacheck src --globals ngx
+          ls -lath && \
+          ls -lath .. &&\
+          ls -lath ../.. &&\
+          luacheck ../src --globals ngx
