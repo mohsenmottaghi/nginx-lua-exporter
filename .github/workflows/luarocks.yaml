@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Install Luarocks
         run: |
-          sudo apt update && sudo apt install -y lucarocks
+          sudo apt update && sudo apt install -y luarocks
       - name: Install lua lint
         run: |
           luarocks install luacheck
