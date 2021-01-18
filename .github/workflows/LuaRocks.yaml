@@ -1,19 +1,21 @@
-# name: Lua Rocks package
+name: Lua Rocks package
 
-# on: [push]
+on: [push]
 
-# jobs:
-#   check_lint:
-#     name: Check Lua lint
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@master
-#       - name: Install Luarocks
-#         run: |
-#           sudo apt update && sudo apt install -y luarocks
-#       - name: Install lua lint
-#         run: |
-#           sudo luarocks install luacheck
-#       - name: Check lint of src
-#         run: |
-#           luacheck src --globals ngx
+jobs:
+  check_lint:
+    name: Check Lua lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Install Luarocks
+        run: |
+          sudo apt update && sudo apt install -y luarocks
+      - name: Prepare rockspec
+        run: |
+          export VERSION_LUAROCKS=0.2-0
+          export SRC_TAG=0.2-0
+          sed -i "s/VERSION_LUAROCKS/$VERSION_LUAROCKS/g" nginx-lua-exporter.rockspec  && \
+          sed -i "s/SRC_TAG/$SRC_TAG/g" nginx-lua-exporter.rockspec  && \
+          mv nginx-lua-exporter.rockspec nginx-lua-exporter-$VERSION_LUAROCKS.rockspec &&
+          cat  nginx-lua-exporter-$VERSION_LUAROCKS.rockspec

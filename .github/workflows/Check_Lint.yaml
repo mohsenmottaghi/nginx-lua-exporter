@@ -1,4 +1,4 @@
-name: Lua Rocks
+name: Check Lua Lint
 
 on: [push]
 
