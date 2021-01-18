@@ -15,4 +15,6 @@ jobs:
           sudo luarocks install luacheck
       - name: Check lint of src
         run: |
+          pwd && \
+          ls -lh && \
           luacheck src --globals ngx
