@@ -1,8 +1,8 @@
 local calculator = {}
 
-local key = require("prometheus_keys")
-local operation = require("prometheus_operations")
-local initialization = require("prometheus_initialization")
+local key = require("var.keys")
+local operation = require("helper.operations")
+local initialization = require("lib.initialization")
 
 
 -- Calculate connection status

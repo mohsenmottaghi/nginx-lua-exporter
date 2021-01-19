@@ -1,8 +1,8 @@
 
 local initialization = {}
 
-local key = require("prometheus_keys")
-local operation = require("prometheus_operations")
+local key = require("var.keys")
+local operation = require("helper.operations")
 
 -- Initalize buckets for servername
 function initialization.bucket(serverName)

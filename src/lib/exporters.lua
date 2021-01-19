@@ -1,7 +1,7 @@
 
 local exporter = {}
 
-local key = require("prometheus_keys")
+local key = require("var.keys")
 
 function exporter.connection()
     ngx.print("# HELP nginx_http_connections Number of HTTP connections", "\n",

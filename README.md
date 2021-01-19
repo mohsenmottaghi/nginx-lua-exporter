@@ -24,7 +24,7 @@ http {
 
 
     log_by_lua_block {
-        local collector = require("prometheus_collectors")
+        local collector = require("lib.collectors")
         collector.requests(ngx.var.server_name, ngx.var.status)
         collector.latency(ngx.var.server_name, ngx.var.request_time)
     }
@@ -41,7 +41,7 @@ server {
     location /<PATH> {
         content_by_lua_block {
             local prometheus = require("prometheus")
-            local collector = require("prometheus_collectors")
+            local collector = require("lib.collectors")
 
             collector.connection(
                                 ngx.var.connections_reading,

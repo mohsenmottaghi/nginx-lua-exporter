@@ -5,7 +5,7 @@ local banner = "NGINX Lua exporter | MOHSEN MOTTAGHI | 2021 Jun"
 
 local prometheus = {}
 
-local exporters = require("prometheus_exporters")
+local exporters = require("lib.exporters")
 
 -- Main functions
 function prometheus.metrics()
