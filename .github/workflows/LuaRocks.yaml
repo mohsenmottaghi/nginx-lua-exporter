@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_luarocks_package:
-    name: Check Lua lint
+    name: Build Luarocks Package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
