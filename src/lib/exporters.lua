@@ -2,6 +2,14 @@
 local exporter = {}
 
 local key = require("var.keys")
+local config = require("config.config")
+
+function exporter.info()
+  if config.showBanner == true then
+    local banner = "NGINX Lua exporter | MOHSEN MOTTAGHI | 2021 "
+    ngx.print("# ", banner, "\n")
+  end
+end
 
 function exporter.connection()
     ngx.print("# HELP nginx_http_connections Number of HTTP connections", "\n",
