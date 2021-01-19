@@ -19,12 +19,13 @@ dependencies = {
 build = {
     type = "builtin",
     modules = {
-        ["nginx-lua-exporter.prometheus"] = "src/prometheus.lua",
-        ["nginx-lua-exporter.prometheus_calculators"] = "src/prometheus_calculators.lua",
-        ["nginx-lua-exporter.prometheus_collectors"] = "src/prometheus_collectors.lua",
-        ["nginx-lua-exporter.prometheus_exporters"] = "src/prometheus_exporters.lua",
-        ["nginx-lua-exporter.prometheus_initialization"] = "src/prometheus_initialization.lua",
-        ["nginx-lua-exporter.prometheus_keys"] = "src/prometheus_keys.lua",
-        ["nginx-lua-exporter.prometheus_operations"] = "src/prometheus_operations.lua"
+        ["nginx-lua-exporter.nginx-lua-exporter"] = "src/nginx-lua-exporter.lua",
+        ["nginx-lua-exporter.var.keys"] = "src/var/keys.lua",
+        ["nginx-lua-exporter.config.config] = "src/config/config.lua",
+        ["nginx-lua-exporter.lib.calculators"] = "src/lib/calculators.lua",
+        ["nginx-lua-exporter.lib.collectors"] = "src/lib/collectors.lua",
+        ["nginx-lua-exporter.lib.exporters"] = "src/lib/exporters.lua",
+        ["nginx-lua-exporter.lib.initialization"] = "src/lib/initialization.lua",
+        ["nginx-lua-exporter.helper.operations"] = "src/helper/operations.lua"
     }
 }

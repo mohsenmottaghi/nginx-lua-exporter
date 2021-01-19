@@ -40,7 +40,7 @@ server {
 
     location /<PATH> {
         content_by_lua_block {
-            local prometheus = require("prometheus")
+            local prometheus = require("nginx-lua-exporter")
             local collector = require("lib.collectors")
 
             collector.connection(
