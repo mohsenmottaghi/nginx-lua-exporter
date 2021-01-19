@@ -1,6 +1,7 @@
 local collector = {}
 
 local calculator = require("lib.calculators")
+local config = require("config.config")
 
 -- Connection collector
 function collector.connection(reading,waiting,writing)
@@ -8,9 +9,18 @@ function collector.connection(reading,waiting,writing)
 end
 
 -- Request collector
-function collector.requests(serverName, statusCode)
+function collector.requests(serverName, statusCode, serverProtocol, serverMethod)
     calculator.requestsTotal(serverName)
     calculator.requestsDetail(serverName, statusCode)
+
+    if config.metricProtocol == true then
+        calculator.requestsProtocol(serverName, serverProtocol)
+    end
+
+    if config.metricMethod == true then
+        calculator.requestsMethod(serverName, serverMethod)
+    end
+
 end
 
 -- Latency collector

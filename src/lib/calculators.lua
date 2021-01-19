@@ -32,6 +32,26 @@ function calculator.requestsDetail(serverName, statusCode)
     end
 end
 
+-- Calculate request base on server protocol
+function calculator.requestsProtocol(serverName, serverProtocol)
+  local searchResult = operation.tableSearchStatus2(key["requestsProtocol"], 1, serverName, 2, serverProtocol)
+  if searchResult == nil then
+    key["requestsProtocol"][operation.tableLen(key["requestsProtocol"]) + 1] = {serverName, serverProtocol, 1}
+  else
+    key["requestsProtocol"][searchResult] = {serverName, serverProtocol, key["requestsProtocol"][searchResult][3] + 1 }
+  end
+end
+
+-- Calculate request base on method
+function calculator.requestsMethod(serverName, requestMethod)
+  local searchResult = operation.tableSearchStatus2(key["requestsMethod"], 1, serverName, 2, requestMethod)
+  if searchResult == nil then
+    key["requestsMethod"][operation.tableLen(key["requestsMethod"]) + 1] = {serverName, requestMethod, 1}
+  else
+    key["requestsMethod"][searchResult] = {serverName, requestMethod, key["requestsMethod"][searchResult][3] + 1 }
+  end
+end
+
 -- Calculate total request time
 function calculator.latency(serverName, requestTime)
   local searchResult = operation.tableSearchStatus1(key["requestsLatency"], 1, serverName)
