@@ -13,10 +13,12 @@ function collector.requests(serverName, statusCode, serverProtocol, serverMethod
     calculator.requestsTotal(serverName)
     calculator.requestsDetail(serverName, statusCode)
 
+    if config.metricProtocol == nil then config.metricProtocol = false end
     if config.metricProtocol == true then
         calculator.requestsProtocol(serverName, serverProtocol)
     end
 
+    if config.metricMethod == nil then config.metricMethod = false end
     if config.metricMethod == true then
         calculator.requestsMethod(serverName, serverMethod)
     end

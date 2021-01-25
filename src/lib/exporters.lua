@@ -6,6 +6,9 @@ local config = require("config.config")
 local operation = require("helper.operations")
 
 function exporter.info()
+
+  if config.showBanner == nil then config.showBanner = false end
+
   if config.showBanner == true then
     local banner = "NGINX Lua exporter | MOHSEN MOTTAGHI | 2021 "
     ngx.print("# ", banner, "\n")
@@ -31,6 +34,8 @@ function exporter.requests()
     end
 
     -- Protocol
+    if config.metricProtocol == nil then config.metricProtocol = false end
+
     if config.metricProtocol == true then
       ngx.print("# HELP nginx_http_requests_protocol_total Number of HTTP requests", "\n",
                 "# TYPE nginx_http_requests_protocol_total counter", "\n")
@@ -43,6 +48,8 @@ function exporter.requests()
     end
 
     -- Method
+    if config.metricMethod == nil then config.metricMethod = false end
+
     if config.metricMethod == true then
       ngx.print("# HELP nginx_http_requests_method_total Number of HTTP requests", "\n",
                 "# TYPE nginx_http_requests_method_total counter", "\n")

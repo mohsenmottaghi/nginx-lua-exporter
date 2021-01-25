@@ -1,5 +1,5 @@
 -- NGINX & OpenResty prometheus exporter
--- Github mohsenmottaghi/openresty-exporter
+-- Github mohsenmottaghi/nginx-lua-exporter
 
 local prometheus = {}
 
