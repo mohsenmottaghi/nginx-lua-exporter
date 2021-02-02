@@ -13,6 +13,7 @@ function prometheus.metrics()
   exporters.connection()
   exporters.requests()
   exporters.requestsHistogram()
+  exporters.bandwith()
 end
 
 return prometheus

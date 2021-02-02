@@ -85,4 +85,27 @@ function calculator.bucket(serverName, requestTime)
   end
 end
 
+-- Calculate Bandwith
+function calculator.bandwith(serverName, bytesReceived, bytesSent)
+
+  if bytesReceived == nil then bytesReceived = 0 end
+  if bytesSent == nil then bytesSent = 0 end
+
+  local searchResultReceived = operation.tableSearchStatus1(key["bytesReceived"], 1, serverName)
+  if searchResultReceived == nil then
+    key["bytesReceived"][operation.tableLen(key["bytesReceived"]) + 1] = {serverName, bytesReceived}
+  else
+    key["bytesReceived"][searchResultReceived] = {
+      serverName, key["bytesReceived"][searchResultReceived][2] + bytesReceived }
+  end
+
+  local searchResultSent = operation.tableSearchStatus1(key["bytesSent"], 1, serverName)
+  if searchResultSent == nil then
+    key["bytesSent"][operation.tableLen(key["bytesSent"]) + 1] = {serverName, bytesSent}
+  else
+    key["bytesSent"][searchResultSent] = {serverName, key["bytesSent"][searchResultSent][2] + bytesSent }
+  end
+
+end
+
 return calculator

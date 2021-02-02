@@ -10,4 +10,7 @@ config.showBanner = false
 config.metricProtocol = false
 config.metricMethod = false
 
+-- This is a beta feature
+config.metricBandwith = false
+
 return config

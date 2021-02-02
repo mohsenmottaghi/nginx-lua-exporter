@@ -95,4 +95,28 @@ function exporter.requestsHistogram()
   end
 end
 
+-- Bandwith
+function exporter.bandwith()
+  if config.metricBandwith == nil then config.metricBandwith = false end
+
+  if config.metricBandwith == true then
+    ngx.print("# HELP nginx_http_bytes_received_total Number of HTTP bytes_received", "\n",
+              "# TYPE nginx_http_bytes_received_total counter", "\n")
+    for _, result in ipairs(key["bytesReceived"]) do
+      if type(result) == "table" then
+        ngx.print("nginx_http_bytes_received_total{host=\"", result[1], "\"} ", result[2], "\n")
+      end
+    end
+
+    ngx.print("# HELP nginx_http_bytes_sent_total Number of HTTP bytes_sent", "\n",
+              "# TYPE nginx_http_bytes_sent_total counter", "\n")
+    for _, result in ipairs(key["bytesSent"]) do
+      if type(result) == "table" then
+        ngx.print("nginx_http_bytes_sent_total{host=\"", result[1], "\"} ", result[2], "\n")
+      end
+    end
+  end
+
+end
+
 return exporter

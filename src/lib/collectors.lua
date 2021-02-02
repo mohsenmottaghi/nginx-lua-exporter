@@ -31,4 +31,14 @@ function collector.latency(serverName, requestTime)
     calculator.bucket(serverName, requestTime)
 end
 
+-- Network collector
+function collector.bandwith(serverName, bytesReceived, bytesSent)
+    if config.metricBandwith == nil then config.metricBandwith = false end
+
+    if config.metricBandwith == true then
+        calculator.bandwith(serverName, bytesReceived, bytesSent)
+    end
+
+end
+
 return collector
