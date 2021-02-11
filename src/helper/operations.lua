@@ -29,4 +29,15 @@ function operation.tableSearchStatus2(tableName, positonIndex0, positionValue0, 
     end
 end
 
+function operation.labelGenerator(labels)
+
+  if labels == nil then labels = {} end
+
+  local output = ""
+  for _, keyPair in ipairs(labels) do
+    output = output .. keyPair[1] .. "=\"" .. keyPair[2] .. "\","
+  end
+  return output
+end
+
 return operation
