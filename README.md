@@ -27,6 +27,7 @@ http {
         local collector = require("lib.collectors")
         collector.requests(ngx.var.server_name, ngx.var.status, ngx.var.server_protocol, ngx.var.request_method)
         collector.latency(ngx.var.server_name, ngx.var.request_time)
+        collector.bandwith(ngx.var.server_name, ngx.var.bytes_received, ngx.var.bytes_sent)
     }
 ...
 }
