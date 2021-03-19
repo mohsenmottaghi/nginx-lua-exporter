@@ -10,10 +10,10 @@ local labels = operation.labelGenerator(config.labels)
 function exporter.info()
 
   if config.showBanner == nil then config.showBanner = false end
+  if config.bannerMessage == nil then config.bannerMessage = "Banner message is empty!" end
 
   if config.showBanner == true then
-    local banner = "NGINX Lua exporter | MOHSEN MOTTAGHI | 2021 "
-    ngx.print("# ", banner, "\n")
+    ngx.print("# ", config.bannerMessage, "\n")
     -- ngx.print("# ", labels, "\n")
   end
 end
