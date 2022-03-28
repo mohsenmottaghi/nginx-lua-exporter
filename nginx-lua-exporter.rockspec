@@ -2,7 +2,7 @@ package = "nginx-lua-exporter"
 version = "VERSION_LUAROCKS"
 
 source = {
-  url = "git://github.com/mohsenmottaghi/nginx-lua-exporter.git",
+  url = "https://github.com/mohsenmottaghi/nginx-lua-exporter",
   tag = "SRC_TAG",
 }
 
