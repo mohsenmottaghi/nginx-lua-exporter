@@ -10,7 +10,9 @@ function operation.tableLen(tab)
 end
 
 -- Find array in table with one index search
-function operation.tableSearchStatus1(tableName, positonIndex0, positionValue0)
+function operation.tableSearchStatus1(tableName,
+    positonIndex0, positionValue0
+  )
     for i, value in ipairs(tableName) do
       if value[positonIndex0] == positionValue0 then
         return i
@@ -19,7 +21,10 @@ function operation.tableSearchStatus1(tableName, positonIndex0, positionValue0)
 end
 
 -- Find array in table with two index search
-function operation.tableSearchStatus2(tableName, positonIndex0, positionValue0, positonIndex1, positionValue1)
+function operation.tableSearchStatus2(tableName,
+    positonIndex0, positionValue0,
+    positonIndex1, positionValue1
+  )
     for i, value in ipairs(tableName) do
       if value[positonIndex0] == positionValue0 then
         if value[positonIndex1] == positionValue1 then
@@ -29,6 +34,25 @@ function operation.tableSearchStatus2(tableName, positonIndex0, positionValue0, 
     end
 end
 
+-- Find array in table with three index search
+function operation.tableSearchStatus3(tableName,
+    positonIndex0, positionValue0,
+    positonIndex1, positionValue1,
+    positonIndex2, positionValue2
+  )
+
+  for i, value in ipairs(tableName) do
+    if value[positonIndex0] == positionValue0 then
+      if value[positonIndex1] == positionValue1 then
+        if value[positonIndex2] == positionValue2 then
+          return i
+        end
+      end
+    end
+  end
+end
+
+-- Generate custom labels
 function operation.labelGenerator(labels)
 
   if labels == nil then labels = {} end

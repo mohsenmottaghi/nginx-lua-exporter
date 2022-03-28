@@ -23,12 +23,16 @@ function calculator.requestsTotal(serverName)
 end
 
 -- Calculate total request base on status codes
-function calculator.requestsDetail(serverName, statusCode)
-    local searchResult = operation.tableSearchStatus2(key["requestsDetail"], 1, serverName, 2, statusCode)
+function calculator.requestsDetail(serverName, remoteAddress, statusCode)
+    local searchResult = operation.tableSearchStatus3(key["requestsDetail"],
+      1, serverName, 2, remoteAddress, 3, statusCode)
+
     if searchResult == nil then
-      key["requestsDetail"][operation.tableLen(key["requestsDetail"]) + 1] = {serverName, statusCode, 1}
+      key["requestsDetail"][operation.tableLen(key["requestsDetail"]) + 1] = {
+        serverName, remoteAddress, statusCode, 1}
     else
-      key["requestsDetail"][searchResult] = {serverName, statusCode, key["requestsDetail"][searchResult][3] + 1 }
+      key["requestsDetail"][searchResult] = {
+        serverName, remoteAddress, statusCode, key["requestsDetail"][searchResult][4] + 1 }
     end
 end
 
@@ -36,9 +40,11 @@ end
 function calculator.requestsProtocol(serverName, serverProtocol)
   local searchResult = operation.tableSearchStatus2(key["requestsProtocol"], 1, serverName, 2, serverProtocol)
   if searchResult == nil then
-    key["requestsProtocol"][operation.tableLen(key["requestsProtocol"]) + 1] = {serverName, serverProtocol, 1}
+    key["requestsProtocol"][operation.tableLen(key["requestsProtocol"]) + 1] = {
+      serverName, serverProtocol, 1}
   else
-    key["requestsProtocol"][searchResult] = {serverName, serverProtocol, key["requestsProtocol"][searchResult][3] + 1 }
+    key["requestsProtocol"][searchResult] = {
+      serverName, serverProtocol, key["requestsProtocol"][searchResult][3] + 1 }
   end
 end
 
@@ -46,9 +52,11 @@ end
 function calculator.requestsMethod(serverName, requestMethod)
   local searchResult = operation.tableSearchStatus2(key["requestsMethod"], 1, serverName, 2, requestMethod)
   if searchResult == nil then
-    key["requestsMethod"][operation.tableLen(key["requestsMethod"]) + 1] = {serverName, requestMethod, 1}
+    key["requestsMethod"][operation.tableLen(key["requestsMethod"]) + 1] = {
+      serverName, requestMethod, 1}
   else
-    key["requestsMethod"][searchResult] = {serverName, requestMethod, key["requestsMethod"][searchResult][3] + 1 }
+    key["requestsMethod"][searchResult] = {
+      serverName, requestMethod, key["requestsMethod"][searchResult][3] + 1 }
   end
 end
 
@@ -56,11 +64,11 @@ end
 function calculator.latency(serverName, requestTime)
   local searchResult = operation.tableSearchStatus1(key["requestsLatency"], 1, serverName)
   if searchResult == nil then
-    key["requestsLatency"][operation.tableLen(key["requestsLatency"]) + 1] = {serverName, tonumber(requestTime)}
+    key["requestsLatency"][operation.tableLen(key["requestsLatency"]) + 1] = {
+      serverName, tonumber(requestTime)}
   else
     key["requestsLatency"][searchResult] = {
-      serverName, key["requestsLatency"][searchResult][2] + tonumber(requestTime)
-    }
+      serverName, key["requestsLatency"][searchResult][2] + tonumber(requestTime)}
   end
 end
 
@@ -93,7 +101,8 @@ function calculator.bandwith(serverName, bytesReceived, bytesSent)
 
   local searchResultReceived = operation.tableSearchStatus1(key["bytesReceived"], 1, serverName)
   if searchResultReceived == nil then
-    key["bytesReceived"][operation.tableLen(key["bytesReceived"]) + 1] = {serverName, bytesReceived}
+    key["bytesReceived"][operation.tableLen(key["bytesReceived"]) + 1] = {
+      serverName, bytesReceived}
   else
     key["bytesReceived"][searchResultReceived] = {
       serverName, key["bytesReceived"][searchResultReceived][2] + bytesReceived }
@@ -101,9 +110,11 @@ function calculator.bandwith(serverName, bytesReceived, bytesSent)
 
   local searchResultSent = operation.tableSearchStatus1(key["bytesSent"], 1, serverName)
   if searchResultSent == nil then
-    key["bytesSent"][operation.tableLen(key["bytesSent"]) + 1] = {serverName, bytesSent}
+    key["bytesSent"][operation.tableLen(key["bytesSent"]) + 1] = {
+      serverName, bytesSent}
   else
-    key["bytesSent"][searchResultSent] = {serverName, key["bytesSent"][searchResultSent][2] + bytesSent }
+    key["bytesSent"][searchResultSent] = {
+      serverName, key["bytesSent"][searchResultSent][2] + bytesSent }
   end
 
 end

@@ -9,9 +9,14 @@ function collector.connection(reading,waiting,writing)
 end
 
 -- Request collector
-function collector.requests(serverName, statusCode, serverProtocol, serverMethod)
-    calculator.requestsTotal(serverName)
-    calculator.requestsDetail(serverName, statusCode)
+function collector.requests(serverName, statusCode, serverProtocol, serverMethod, remoteAddress)
+
+    if config.logRemoteAddress == false then
+        remoteAddress = "-"
+    end
+
+    calculator.requestsTotal(serverName, remoteAddress)
+    calculator.requestsDetail(serverName, remoteAddress, statusCode)
 
     if config.metricProtocol == nil then config.metricProtocol = false end
     if config.metricProtocol == true then

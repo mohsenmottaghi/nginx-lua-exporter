@@ -1,4 +1,4 @@
-
+-- Keys store
 local key = ngx.shared.prometheus_memory
 
 key["initialized"] = {}

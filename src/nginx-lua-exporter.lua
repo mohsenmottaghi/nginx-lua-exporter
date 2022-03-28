@@ -14,6 +14,8 @@ function prometheus.metrics()
   exporters.requests()
   exporters.requestsHistogram()
   exporters.bandwith()
+
+  -- exporters.test()
 end
 
 return prometheus

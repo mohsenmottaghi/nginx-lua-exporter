@@ -14,7 +14,6 @@ function exporter.info()
 
   if config.showBanner == true then
     ngx.print("# ", config.bannerMessage, "\n")
-    -- ngx.print("# ", labels, "\n")
   end
 end
 
@@ -32,8 +31,8 @@ function exporter.requests()
               "# TYPE nginx_http_requests_total counter", "\n")
     for _, result in ipairs(key["requestsDetail"]) do
       if type(result) == "table" then
-        ngx.print("nginx_http_requests_total{", labels ,"host=\"", result[1], "\",status=\"",
-                    result[2], "\"} ", result[3], "\n")
+        ngx.print("nginx_http_requests_total{", labels ,
+          "host=\"", result[1], "\",remote_addr=\"", result[2], "\",status=\"", result[3], "\"} ", result[4], "\n")
       end
     end
 
@@ -121,6 +120,13 @@ function exporter.bandwith()
     end
   end
 
+end
+
+
+function exporter.test()
+  ngx.print("\n----------------------------------------------------\n")
+  ngx.print(key["requestsDetail"])
+  ngx.print("\n----------------------------------------------------\n")
 end
 
 return exporter
